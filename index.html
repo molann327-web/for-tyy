@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Untuk Kamu</title>
+    <style>
+        /* Reset & Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #0b0c10;
+            color: #c5a880; /* Warna gold/champagne muted untuk kesan elegan */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+            perspective: 1000px;
+        }
+
+        /* Background Vignette */
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, transparent 30%, rgba(0,0,0,0.8) 100%);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* Card Container */
+        .card {
+            background: rgba(26, 26, 29, 0.75);
+            border: 1px solid rgba(197, 168, 128, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 2.5rem;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);
+            text-align: center;
+            max-width: 450px;
+            width: 90%;
+            z-index: 2;
+            transition: all 0.5s ease;
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 2rem;
+            font-weight: 300;
+            letter-spacing: 2px;
+            margin-bottom: 1.5rem;
+            color: #e5c596;
+            text-transform: uppercase;
+        }
+
+        p {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #a8a8a8;
+            margin-bottom: 2rem;
+            font-weight: 300;
+        }
+
+        .highlight {
+            color: #e5c596;
+            font-weight: 400;
+        }
+
+        /* Buttons styling */
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            position: relative;
+            height: 50px;
+            align-items: center;
+        }
+
+        button {
+            padding: 0.6rem 2rem;
+            font-size: 1rem;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            letter-spacing: 1px;
+        }
+
+        .btn-yes {
+            background-color: #e5c596;
+            color: #0b0c10;
+            border: none;
+            box-shadow: 0 4px 15px rgba(229, 197, 150, 0.3);
+        }
+
+        .btn-yes:hover {
+            background-color: #f3d8b1;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(229, 197, 150, 0.5);
+        }
+
+        .btn-no {
+            background-color: transparent;
+            color: #c5a880;
+            border: 1px solid rgba(197, 168, 128, 0.5);
+            position: relative;
+        }
+
+        .btn-pdf {
+            display: inline-block;
+            text-decoration: none;
+            padding: 0.6rem 2rem;
+            font-size: 1rem;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            letter-spacing: 1px;
+            background-color: #e5c596;
+            color: #0b0c10;
+            border: none;
+            box-shadow: 0 4px 15px rgba(229, 197, 150, 0.3);
+            margin-top: 1rem;
+        }
+
+        .btn-pdf:hover {
+            background-color: #f3d8b1;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(229, 197, 150, 0.5);
+        }
+
+        /* Success Message Area */
+        .success-content {
+            display: none;
+        }
+
+        .success-content h2 {
+            font-size: 1.8rem;
+            color: #e5c596;
+            margin-bottom: 1rem;
+            font-weight: 300;
+        }
+
+        /* Decorative line */
+        .line {
+            width: 50px;
+            height: 1px;
+            background-color: rgba(197, 168, 128, 0.4);
+            margin: 0 auto 1.5rem auto;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="overlay"></div>
+
+    <div class="card" id="mainCard">
+        <div id="requestContent">
+            <h1>Dear You,</h1>
+            <div class="line"></div>
+            <p>Aku tahu beberapa hal belakangan ini mungkin nggak berjalan dengan baik, dan aku minta maaf atas kekeliruanku. <br><br>Aku sangat menghargai kehadiranmu. <span class="highlight">Mau kan maafin aku?</span></p>
+            
+            <div class="btn-container">
+                <button class="btn-yes" onclick="acceptApology()">Mau</button>
+                <button class="btn-no" id="btnNo" onmouseover="moveButton()">Enggak</button>
+            </div>
+        </div>
+
+        <div id="successContent" class="success-content">
+            <h1>Thank You</h1>
+            <div class="line"></div>
+            <h2>Terima kasih banyak.</h2>
+            <p>Satu kata darimu sangat berarti buatku. Aku janji akan jadi lebih baik lagi ke depannya. ✨</p>
+            <a href="untuk%20tyy.pdf" target="_blank" class="btn-pdf">Buka Surat</a>
+        </div>
+    </div>
+
+    <script>
+        // Fungsi untuk memindahkan tombol "Enggak" saat di-hover (didekati kursor/disentuh)
+        function moveButton() {
+            const btnNo = document.getElementById('btnNo');
+            
+            // Mengambil ukuran window untuk batas pergerakan
+            const padding = 20;
+            const maxX = window.innerWidth - btnNo.offsetWidth - padding;
+            const maxY = window.innerHeight - btnNo.offsetHeight - padding;
+            
+            // Menghasilkan posisi acak di layar
+            const randomX = Math.floor(Math.random() * maxX);
+            const randomY = Math.floor(Math.random() * maxY);
+            
+            // Mengubah posisi tombol menjadi absolut agar bisa lepas dari container
+            btnNo.style.position = 'fixed';
+            btnNo.style.left = randomX + 'px';
+            btnNo.style.top = randomY + 'px';
+        }
+
+        // Fungsi saat tombol "Mau" diklik
+        function acceptApology() {
+            const card = document.getElementById('mainCard');
+            const requestContent = document.getElementById('requestContent');
+            const successContent = document.getElementById('successContent');
+
+            // Efek transisi halus saat ganti konten
+            card.style.transform = 'scale(0.9)';
+            card.style.opacity = '0';
+
+            setTimeout(() => {
+                requestContent.style.display = 'none';
+                successContent.style.display = 'block';
+                card.style.transform = 'scale(1)';
+                card.style.opacity = '1';
+            }, 400);
+        }
+    </script>
+</body>
+</html>
